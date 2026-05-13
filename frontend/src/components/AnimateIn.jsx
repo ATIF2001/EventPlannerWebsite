@@ -1,3 +1,5 @@
+﻿"use client";
+
 import { useEffect, useRef, useState } from "react";
 
 function AnimateIn({ children, delay = 120, className = "" }) {
@@ -38,3 +40,4 @@ function AnimateIn({ children, delay = 120, className = "" }) {
 }
 
 export default AnimateIn;
+

@@ -1,10 +1,10 @@
+﻿"use client";
+
 import ContactForm from "../components/ContactForm";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWhatsapp, faTiktok, faInstagram, faSnapchat } from "@fortawesome/free-brands-svg-icons";
-import heroVideo from "../assets/HeroSection.mp4";
 import corporateImage from "../assets/home/corporate.png";
 import weddingImage from "../assets/home/wedding.png";
 import outdoorImage from "../assets/home/outdoor.png";
@@ -48,7 +48,6 @@ const services = [
 const section = "app-shell";
 
 function HomePage() {
-  const location = useLocation();
   const { getText, getImage } = useSiteContent();
 
   const homeProjects = [
@@ -83,13 +82,20 @@ function HomePage() {
   const contactPhone = getText("home.contact.phone", "+971 555 44 2125");
   const contactEmail = getText("home.contact.email", "Mk4events.info@gmail.com");
   const contactAddress = getText("home.contact.address", "Wasit St - Al Shahba - Mughaider Suburb - Sharjah");
+  const heroVideo = getImage("home.hero.video", "/HeroSection.mp4");
 
   useEffect(() => {
-    if (location.hash === "#projects") {
-      const el = document.getElementById("projects");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [location.hash]);
+    const scrollToProjectsIfNeeded = () => {
+      if (typeof window === "undefined") return;
+      if (window.location.hash === "#projects") {
+        const el = document.getElementById("projects");
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+    scrollToProjectsIfNeeded();
+    window.addEventListener("hashchange", scrollToProjectsIfNeeded);
+    return () => window.removeEventListener("hashchange", scrollToProjectsIfNeeded);
+  }, []);
 
   return (
     <main className="text-white">
@@ -157,7 +163,7 @@ function HomePage() {
             <AnimateIn key={project.title} delay={180}>
               {/* Card */}
         <Link
-  to={`/projects/${project.slug}`}
+  href={`/projects/${project.slug}`}
   className={`group relative flex flex-col overflow-hidden rounded-md shadow-[0_10px_30px_rgba(0,0,0,0.45)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_18px_40px_rgba(0,0,0,0.65)] ${
     project.title === "Wedding" ? "sm:col-span-2 md:col-span-1 md:-mb-16 md:-mt-16" : ""
   }`}
@@ -257,5 +263,6 @@ function HomePage() {
 }
 
 export default HomePage;
+
 
 

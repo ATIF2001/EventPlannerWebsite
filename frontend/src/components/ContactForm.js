@@ -1,3 +1,5 @@
+﻿"use client";
+
 import { useState } from "react";
 import { submitContactForm } from "../services/api";
 
@@ -104,3 +106,4 @@ function ContactForm() {
 }
 
 export default ContactForm;
+

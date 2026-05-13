@@ -1,10 +1,17 @@
-import { Navigate } from "react-router-dom";
+﻿"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { isAdminLoggedIn } from "../utils/auth";
 
 function ProtectedRoute({ children }) {
-  if (!isAdminLoggedIn()) {
-    return <Navigate to="/login" replace />;
-  }
+  const router = useRouter();
+  useEffect(() => {
+    if (!isAdminLoggedIn()) {
+      router.replace("/login");
+    }
+  }, [router]);
+  if (!isAdminLoggedIn()) return null;
   return children;
 }
 

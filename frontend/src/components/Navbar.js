@@ -1,21 +1,25 @@
+﻿"use client";
+
 import { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import AnimateIn from "./AnimateIn";
 
-const navItemClass = ({ isActive }) =>
+const navItemClass = (isActive) =>
   `relative pb-2 transition ${
     isActive
       ? "text-white after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-white"
       : "text-white/80 hover:text-white"
   }`;
 
-const mobileNavItemClass = ({ isActive }) =>
+const mobileNavItemClass = (isActive) =>
   `block w-full py-3 px-4 text-lg transition border-b border-white/10 ${
     isActive ? "text-white font-semibold bg-white/10" : "text-white/80 hover:text-white hover:bg-white/5"
   }`;
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   // Close menu on route change or Escape key
   useEffect(() => {
@@ -34,7 +38,7 @@ function Navbar() {
     <AnimateIn delay={80}>
     <header className="relative flex items-center justify-between">
       {/* Logo */}
-<Link to="/" onClick={() => setMenuOpen(false)}>
+<Link href="/" onClick={() => setMenuOpen(false)}>
   <img
     src="/logo192.png"
     alt="Wedding Planner logo"
@@ -44,15 +48,15 @@ function Navbar() {
 
       {/* Desktop Nav */}
       <nav className="hidden gap-14 text-lg lg:flex">
-        <NavLink to="/" end className={navItemClass}>Home</NavLink>
-        <Link to="/#projects" className="relative pb-2 text-white/80 transition hover:text-white">Projects</Link>
-        <NavLink to="/blogs" className={navItemClass}>Blog</NavLink>
-        <NavLink to="/about-us" className={navItemClass}>About us</NavLink>
+        <Link href="/" className={navItemClass(pathname === "/")}>Home</Link>
+        <Link href="/#projects" className="relative pb-2 text-white/80 transition hover:text-white">Projects</Link>
+        <Link href="/blogs" className={navItemClass(pathname.startsWith("/blogs"))}>Blog</Link>
+        <Link href="/about-us" className={navItemClass(pathname === "/about-us")}>About us</Link>
       </nav>
 
       {/* Desktop CTA */}
       <Link
-        to="/contact-us"
+        href="/contact-us"
         className="hidden border border-white/70 px-8 py-4 text-base text-white hover:bg-white/10 transition lg:block"
       >
         contact us
@@ -90,13 +94,13 @@ function Navbar() {
         style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(10px)" }}
       >
         <nav className="flex flex-col">
-          <NavLink to="/" end className={mobileNavItemClass} onClick={() => setMenuOpen(false)}>Home</NavLink>
-          <Link to="/#projects" className="block w-full border-b border-white/10 px-4 py-3 text-lg text-white/80 transition hover:bg-white/5 hover:text-white" onClick={() => setMenuOpen(false)}>Projects</Link>
-          <NavLink to="/blogs" className={mobileNavItemClass} onClick={() => setMenuOpen(false)}>Blog</NavLink>
-          <NavLink to="/about-us" className={mobileNavItemClass} onClick={() => setMenuOpen(false)}>About us</NavLink>
+          <Link href="/" className={mobileNavItemClass(pathname === "/")} onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link href="/#projects" className="block w-full border-b border-white/10 px-4 py-3 text-lg text-white/80 transition hover:bg-white/5 hover:text-white" onClick={() => setMenuOpen(false)}>Projects</Link>
+          <Link href="/blogs" className={mobileNavItemClass(pathname.startsWith("/blogs"))} onClick={() => setMenuOpen(false)}>Blog</Link>
+          <Link href="/about-us" className={mobileNavItemClass(pathname === "/about-us")} onClick={() => setMenuOpen(false)}>About us</Link>
           <div className="p-4">
             <Link
-              to="/contact-us"
+              href="/contact-us"
               className="block text-center border border-white/70 px-8 py-3 text-base text-white hover:bg-white/10 transition"
               onClick={() => setMenuOpen(false)}
             >
@@ -111,3 +115,4 @@ function Navbar() {
 }
 
 export default Navbar;
+

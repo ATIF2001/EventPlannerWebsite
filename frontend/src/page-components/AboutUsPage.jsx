@@ -1,3 +1,5 @@
+﻿"use client";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram, faTiktok, faFacebook } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -8,7 +10,7 @@ import {
   Presentation,
   BriefcaseBusiness,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import heroImage from "../assets/aboutus/heroImage.png";
 import founderImage from "../assets/home/MohamedKanara.jpg";
 import aboutus from "../assets/aboutus/hero.png";
@@ -42,7 +44,7 @@ function AboutUsPage() {
           <div className="pt-20" />
           <AnimateIn delay={140} className="mb-12 mt-auto text-center">
             <p className="text-xl text-white/90 sm:text-2xl">
-              <Link to="/" className="hover:underline">Home</Link> | About us
+              <Link href="/" className="hover:underline">Home</Link> | About us
             </p>
             <h1 className="mt-2 text-4xl font-light sm:text-5xl md:text-6xl">{getText("about.hero.heading", "About us")}</h1>
           </AnimateIn>
@@ -128,7 +130,7 @@ function AboutUsPage() {
 
       <section className="px-6 pb-10 pt-6 text-center md:px-12">
         <p className="text-base text-white/70 sm:text-lg md:text-xl">Are you preparing for your wedding?</p>
-        <Link to="/contact-us" className="mt-2 inline-block text-3xl font-light hover:text-white/85 sm:text-6xl md:text-8xl">
+        <Link href="/contact-us" className="mt-2 inline-block text-3xl font-light hover:text-white/85 sm:text-6xl md:text-8xl">
           GET IN TOUCH
         </Link>
       </section>
@@ -137,5 +139,6 @@ function AboutUsPage() {
 }
 
 export default AboutUsPage;
+
 
 

@@ -1,3 +1,5 @@
+﻿"use client";
+
 import { useState } from "react";
 
 function ServiceCard({ label, icon: Icon, color }) {
@@ -24,3 +26,4 @@ function ServiceCard({ label, icon: Icon, color }) {
 }
 
 export default ServiceCard;
+

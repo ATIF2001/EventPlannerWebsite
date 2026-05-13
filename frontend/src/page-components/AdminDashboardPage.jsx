@@ -1,7 +1,8 @@
+"use client";
+
 import { useEffect, useMemo, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import ReactQuill from "react-quill-new";
-import "react-quill-new/dist/quill.snow.css";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import CropImageModal from "../components/admin/CropImageModal";
 import CustomizationContentTab from "../components/admin/CustomizationContentTab";
 import SeoTab from "../components/admin/SeoTab";
@@ -34,8 +35,10 @@ import {
 import { logoutAdmin } from "../utils/auth";
 import Seo from "../components/Seo";
 
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+
 function AdminDashboardPage() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
   const quillRef = useRef(null);
   const [form, setForm] = useState(emptyForm);
   const [blogs, setBlogs] = useState([]);
@@ -583,7 +586,7 @@ function AdminDashboardPage() {
             <div className="flex items-center gap-3">
               <button
                 className="rounded-lg border border-white/20 px-5 py-2.5 hover:bg-white/10 transition"
-                onClick={() => { logoutAdmin(); navigate("/login"); }}
+                onClick={() => { logoutAdmin(); navigate.push("/login"); }}
                 type="button"
               >
                 Logout

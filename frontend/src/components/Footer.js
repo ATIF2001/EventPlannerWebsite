@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+﻿"use client";
+
+import Link from "next/link";
 import AnimateIn from "./AnimateIn";
 import { useSiteContent } from "../hooks/useSiteContent";
 
@@ -24,9 +26,9 @@ function Footer() {
             Services
           </h4>
           <ul className="mt-5 space-y-3 text-base text-white/85">
-            <li><Link to="/projects/corporate">Corporate</Link></li>
-            <li><Link to="/projects/wedding">Wedding</Link></li>
-            <li><Link to="/projects/outdoor">Outdoor</Link></li>
+            <li><Link href="/projects/corporate">Corporate</Link></li>
+            <li><Link href="/projects/wedding">Wedding</Link></li>
+            <li><Link href="/projects/outdoor">Outdoor</Link></li>
           </ul>
         </div>
 
@@ -35,10 +37,10 @@ function Footer() {
             Resources
           </h4>
           <ul className="mt-5 space-y-3 text-base text-white/85">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/projects/corporate">Projects</Link></li>
-            <li><Link to="/blogs">Blogs</Link></li>
-            <li><Link to="/about-us">About us</Link></li>
+            <li><Link href="/">Home</Link></li>
+            <li><Link href="/projects/corporate">Projects</Link></li>
+            <li><Link href="/blogs">Blogs</Link></li>
+            <li><Link href="/about-us">About us</Link></li>
           </ul>
       
         </div>
@@ -49,5 +51,6 @@ function Footer() {
 }
 
 export default Footer;
+
 
 

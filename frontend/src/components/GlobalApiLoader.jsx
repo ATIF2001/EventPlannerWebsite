@@ -1,3 +1,5 @@
+"use client";
+
 import { OrbitalLoader } from "./ui/orbital-loader";
 import { useApiLoading } from "../hooks/useApiLoading";
 
@@ -15,4 +17,3 @@ function GlobalApiLoader() {
 }
 
 export default GlobalApiLoader;
-
