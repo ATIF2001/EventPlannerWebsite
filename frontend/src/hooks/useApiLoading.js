@@ -1,3 +1,5 @@
+﻿"use client";
+
 import { useEffect, useState } from "react";
 import { subscribeApiLoading } from "../services/api";
 
@@ -13,4 +15,5 @@ export function useApiLoading() {
 
   return isLoading;
 }
+
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 const API_ROUTES = {
   authLogin: "/auth/login",
   blogs: "/blogs",
@@ -56,7 +56,7 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   startRequest();
-  const token = localStorage.getItem("adminToken");
+  const token = typeof window !== "undefined" ? localStorage.getItem("adminToken") : null;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

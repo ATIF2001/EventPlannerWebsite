@@ -1,19 +1,25 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { fetchBlogBySlug } from "../services/api";
 import AnimateIn from "../components/AnimateIn";
 import Seo from "../components/Seo";
 import { SITE_URL } from "../config/site";
 import { useSiteContent } from "../hooks/useSiteContent";
 
-function BlogDetailsPage() {
-  const { slug = "" } = useParams();
+function BlogDetailsPage({ slug: slugProp = "", initialBlog = null }) {
+  const params = useParams();
+  const slug = slugProp || params?.slug || "";
   const { getText } = useSiteContent();
-  const [blog, setBlog] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [blog, setBlog] = useState(initialBlog);
+  const [loading, setLoading] = useState(!initialBlog);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!slug) return;
+    if (initialBlog && initialBlog.slug === slug) return;
     async function load() {
       try {
         const item = await fetchBlogBySlug(slug);
@@ -24,8 +30,8 @@ function BlogDetailsPage() {
         setLoading(false);
       }
     }
-    if (slug) load();
-  }, [slug]);
+    load();
+  }, [slug, initialBlog]);
 
   if (loading) return <main className="min-h-screen overflow-x-hidden bg-[#05070b] px-6 pt-40 text-white md:px-24"><Seo title="Loading Blog | MK Wedding Planner" noindex />Loading...</main>;
   if (error || !blog) return <main className="min-h-screen overflow-x-hidden bg-[#05070b] px-6 pt-40 text-white md:px-24"><Seo title="Blog Not Found | MK Wedding Planner" noindex />{error}</main>;
@@ -111,7 +117,7 @@ function BlogDetailsPage() {
 
       <section className="px-6 pb-10 pt-16 text-center md:px-12">
         <p className="text-base text-white/70 sm:text-lg md:text-xl">Are you preparing for your wedding?</p>
-        <Link to="/contact-us" className="mt-2 inline-block text-3xl font-light leading-tight hover:text-white/85 sm:text-6xl md:text-8xl">
+        <Link href="/contact-us" className="mt-2 inline-block text-3xl font-light leading-tight hover:text-white/85 sm:text-6xl md:text-8xl">
           GET IN TOUCH
         </Link>
       </section>

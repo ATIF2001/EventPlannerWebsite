@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+﻿"use client";
+
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 function getCardHeightClass(featured) {
@@ -90,7 +92,7 @@ export default function CircularProjectCard({ title, slug, images, featured = fa
 
   return (
     <Link
-      to={`/projects/${slug}`}
+      href={`/projects/${slug}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={`group block rounded-md border border-white/10 bg-zinc-950 shadow-[0_10px_30px_rgba(0,0,0,0.45)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_18px_40px_rgba(0,0,0,0.65)] ${
@@ -121,6 +123,7 @@ export default function CircularProjectCard({ title, slug, images, featured = fa
     </Link>
   );
 }
+
 
 
 

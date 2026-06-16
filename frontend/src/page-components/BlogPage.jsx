@@ -1,18 +1,22 @@
+﻿"use client";
+
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import blogHero from "../assets/blog/blog.png";
 import { fetchPublishedBlogs } from "../services/api";
 import AnimateIn from "../components/AnimateIn";
 import Seo from "../components/Seo";
 import { useSiteContent } from "../hooks/useSiteContent";
 
-function BlogPage() {
+function BlogPage({ initialBlogs = [] }) {
   const { getText, getImage } = useSiteContent();
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const hasInitial = Array.isArray(initialBlogs) && initialBlogs.length > 0;
+  const [blogs, setBlogs] = useState(Array.isArray(initialBlogs) ? initialBlogs : []);
+  const [loading, setLoading] = useState(!hasInitial);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (hasInitial) return;
     async function load() {
       try {
         const items = await fetchPublishedBlogs();
@@ -24,7 +28,7 @@ function BlogPage() {
       }
     }
     load();
-  }, []);
+  }, [hasInitial]);
 
   return (
     <main className="bg-[#06080d] text-white">
@@ -40,7 +44,7 @@ function BlogPage() {
           <div className="pt-20" />
           <AnimateIn delay={140} className="mb-12 mt-auto text-center">
             <p className="text-xl text-white/90 sm:text-2xl md:text-3xl">
-              <Link to="/" className="hover:underline">Home</Link> | Blog
+              <Link href="/" className="hover:underline">Home</Link> | Blog
             </p>
             <h1 className="mt-2 text-4xl font-light sm:text-5xl md:text-7xl">{getText("blog.hero.heading", "BLOGS")}</h1>
           </AnimateIn>
@@ -66,7 +70,7 @@ function BlogPage() {
                 <p className="mt-3 text-lg leading-relaxed text-white/85">{blog.description}</p>
                 <div className="mt-6 flex items-center justify-between text-sm">
                   <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
-                  <Link to={`/blogs/${blog.slug}`} className="font-semibold underline">
+                  <Link href={`/blogs/${blog.slug}`} className="font-semibold underline">
                     Read more
                   </Link>
                 </div>
@@ -79,7 +83,7 @@ function BlogPage() {
 
       <section className="px-6 pb-10 text-center md:px-12">
         <p className="text-base text-white/70 sm:text-lg md:text-xl">Are you preparing for your wedding?</p>
-        <Link to="/contact-us" className="mt-2 inline-block text-3xl font-light hover:text-white/85 sm:text-6xl md:text-8xl">
+        <Link href="/contact-us" className="mt-2 inline-block text-3xl font-light hover:text-white/85 sm:text-6xl md:text-8xl">
           GET IN TOUCH
         </Link>
       </section>
@@ -88,5 +92,6 @@ function BlogPage() {
 }
 
 export default BlogPage;
+
 
 

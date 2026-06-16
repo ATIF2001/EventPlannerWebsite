@@ -1,10 +1,10 @@
 "use client";
 
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { Button } from "./button";
 
 export function NotFoundPage() {
-  const navigate = useNavigate();
+  const navigate = useRouter();
 
   return (
     <section className="flex min-h-screen items-center justify-center bg-white pt-28 font-serif">
@@ -28,7 +28,7 @@ export function NotFoundPage() {
 
               <Button
                 variant="default"
-                onClick={() => navigate("/")}
+                onClick={() => navigate.push("/")}
                 className="my-5 bg-green-600 text-white hover:bg-green-700"
               >
                 Go to Home
@@ -40,4 +40,3 @@ export function NotFoundPage() {
     </section>
   );
 }
-

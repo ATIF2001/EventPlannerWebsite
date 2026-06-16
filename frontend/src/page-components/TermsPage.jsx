@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+﻿"use client";
+
+import Link from "next/link";
 import Seo from "../components/Seo";
 import { useSiteContent } from "../hooks/useSiteContent";
 import page01 from "../assets/TermsAndConditions/mk-highlight-page-01.jpg";
@@ -60,7 +62,7 @@ function TermsPage() {
 
       <div className="mx-auto max-w-4xl">
         <p className="text-white/70">
-          <Link to="/" className="hover:underline">
+          <Link href="/" className="hover:underline">
             Home
           </Link>{" "}
           | Terms & Conditions
@@ -85,3 +87,4 @@ function TermsPage() {
 }
 
 export default TermsPage;
+

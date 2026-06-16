@@ -1,9 +1,13 @@
+﻿"use client";
+
 import { useEffect, useMemo, useState } from "react";
 import { fetchPublicSiteSettings } from "../services/api";
+import { useSiteContentContext } from "../components/next/SiteContentProvider";
 
 export function useSiteContent() {
-  const [settings, setSettings] = useState(null);
-  const [blocks, setBlocks] = useState([]);
+  const context = useSiteContentContext();
+  const [settings, setSettings] = useState(context?.settings || null);
+  const [blocks, setBlocks] = useState(Array.isArray(context?.blocks) ? context.blocks : []);
 
   useEffect(() => {
     let mounted = true;
@@ -20,28 +24,15 @@ export function useSiteContent() {
         .catch(() => {});
     };
 
-    refresh(true);
-
-    const intervalId = setInterval(() => {
-      refresh(false);
-    }, 60 * 1000);
-
-    const handleVisibilityOrFocus = () => {
-      if (document.visibilityState === "visible") {
-        refresh(true);
-      }
-    };
-
-    window.addEventListener("focus", handleVisibilityOrFocus);
-    document.addEventListener("visibilitychange", handleVisibilityOrFocus);
+    // Only fetch once on client if server-seeded data is missing.
+    if (!settings || blocks.length === 0) {
+      refresh(true);
+    }
 
     return () => {
       mounted = false;
-      clearInterval(intervalId);
-      window.removeEventListener("focus", handleVisibilityOrFocus);
-      document.removeEventListener("visibilitychange", handleVisibilityOrFocus);
     };
-  }, []);
+  }, [settings, blocks.length]);
 
   const map = useMemo(() => {
     const m = new Map();
@@ -54,8 +45,13 @@ export function useSiteContent() {
   }
 
   function getImage(key, fallback) {
-    return map.get(key) || fallback;
+    const value = map.get(key) || fallback;
+    if (value && typeof value === "object" && typeof value.src === "string") {
+      return value.src;
+    }
+    return value;
   }
 
   return { settings, blocks, getText, getImage };
 }
+

@@ -1,7 +1,9 @@
+﻿"use client";
+
 import ContactUsSection from "../components/ContactUsSection";
 import contactHero from "../assets/contactus/Hero.jpg";
 import AnimateIn from "../components/AnimateIn";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Seo from "../components/Seo";
 import { useSiteContent } from "../hooks/useSiteContent";
 
@@ -23,7 +25,7 @@ function ContactUsPage() {
         <div className="relative z-10 flex min-h-[440px] flex-col items-center justify-center px-6 pt-24 text-center md:px-12">
           <AnimateIn delay={120}>
             <p className="mb-3 text-xl text-white/90 sm:text-2xl md:text-3xl">
-              <Link to="/" className="hover:underline">Home</Link> | Contact us
+              <Link href="/" className="hover:underline">Home</Link> | Contact us
             </p>
             <h1 className="text-4xl font-light leading-none sm:text-5xl md:text-7xl">{getText("contact.hero.heading", "Contact us")}</h1>
           </AnimateIn>
@@ -36,5 +38,6 @@ function ContactUsPage() {
 }
 
 export default ContactUsPage;
+
 
 

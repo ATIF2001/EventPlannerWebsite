@@ -1,3 +1,5 @@
+﻿"use client";
+
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./button";
@@ -108,6 +110,7 @@ export const HeroSection = React.forwardRef(
 HeroSection.displayName = "HeroSection";
 
 export default HeroSection;
+
 
 
 

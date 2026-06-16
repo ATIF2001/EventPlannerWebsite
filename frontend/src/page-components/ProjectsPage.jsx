@@ -1,10 +1,10 @@
+"use client";
+
 import { useEffect, useMemo, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import LightGallery from "lightgallery/react";
 import lgThumbnail from "lightgallery/plugins/thumbnail";
-import "lightgallery/css/lightgallery.css";
-import "lightgallery/css/lg-zoom.css";
-import "lightgallery/css/lg-thumbnail.css";
 import corporateHeroImage from "../assets/home/corporate.png";
 import weddingHeroImage from "../assets/home/wedding.png";
 import outdoorHeroImage from "../assets/home/outdoor.png";
@@ -28,15 +28,17 @@ function normalizeType(value) {
   return normalized === "coporate" ? "corporate" : normalized;
 }
 
-function CategoryProjectsView({ activeType }) {
+function CategoryProjectsView({ activeType, initialProjects = [] }) {
   const { getText, getImage } = useSiteContent();
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const hasInitial = Array.isArray(initialProjects) && initialProjects.length > 0;
+  const [projects, setProjects] = useState(Array.isArray(initialProjects) ? initialProjects : []);
+  const [loading, setLoading] = useState(!hasInitial);
   const [error, setError] = useState("");
   const categoryConfig = categoryMap[activeType];
   const pageHeroImage = getProjectsHeroByType(getImage, activeType, categoryConfig.hero);
 
   useEffect(() => {
+    if (hasInitial) return;
     let mounted = true;
     setLoading(true);
     setError("");
@@ -53,7 +55,7 @@ function CategoryProjectsView({ activeType }) {
     return () => {
       mounted = false;
     };
-  }, [activeType]);
+  }, [activeType, hasInitial]);
 
   return (
     <main className="bg-[#05070b] text-white">
@@ -77,7 +79,7 @@ function CategoryProjectsView({ activeType }) {
           <div className="pt-20" />
           <AnimateIn delay={120} className="mb-28 mt-auto text-center">
             <p className="mb-3 text-base text-white/85 sm:text-lg md:text-xl">
-              <Link to="/" className="hover:underline">Home</Link> | Projects
+              <Link href="/" className="hover:underline">Home</Link> | Projects
             </p>
             <h1 className="text-4xl font-light sm:text-5xl md:text-6xl">{getText("projects.hero.heading", categoryConfig.title)}</h1>
           </AnimateIn>
@@ -104,7 +106,7 @@ function CategoryProjectsView({ activeType }) {
               {projects.map((project) => (
                 <Link
                   key={project.id}
-                  to={`/projects/${activeType}/${project.slug}`}
+                  href={`/projects/${activeType}/${project.slug}`}
                   className="group overflow-hidden border border-white/10 bg-black/40 transition hover:-translate-y-1"
                 >
                   <img
@@ -123,15 +125,17 @@ function CategoryProjectsView({ activeType }) {
   );
 }
 
-function ProjectDetailsView({ activeType, projectSlug }) {
+function ProjectDetailsView({ activeType, projectSlug, initialProject = null }) {
   const { getText, getImage } = useSiteContent();
-  const [project, setProject] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [project, setProject] = useState(initialProject);
+  const [loading, setLoading] = useState(!initialProject);
   const [error, setError] = useState("");
   const fallbackHero = categoryMap[activeType]?.hero || corporateHeroImage;
   const categoryHeroImage = getProjectsHeroByType(getImage, activeType, fallbackHero);
 
   useEffect(() => {
+    if (!projectSlug) return;
+    if (initialProject && initialProject.slug === projectSlug) return;
     let mounted = true;
     setLoading(true);
     setError("");
@@ -148,7 +152,7 @@ function ProjectDetailsView({ activeType, projectSlug }) {
     return () => {
       mounted = false;
     };
-  }, [projectSlug]);
+  }, [projectSlug, initialProject]);
 
   const galleryImages = useMemo(() => project?.galleryImages || [], [project]);
   const hero = project?.coverImage || categoryHeroImage;
@@ -180,8 +184,8 @@ function ProjectDetailsView({ activeType, projectSlug }) {
           <div className="pt-20" />
           <div className="mb-28 mt-auto text-center">
             <p className="mb-3 text-base text-white/85 sm:text-lg md:text-xl">
-              <Link to="/" className="hover:underline">Home</Link> |{" "}
-              <Link to={`/projects/${activeType}`} className="hover:underline">Projects</Link>
+              <Link href="/" className="hover:underline">Home</Link> |{" "}
+              <Link href={`/projects/${activeType}`} className="hover:underline">Projects</Link>
             </p>
             <h1 className="text-4xl font-light sm:text-5xl md:text-6xl">{getText("projects.hero.heading", project?.title || "Project")}</h1>
           </div>
@@ -233,7 +237,7 @@ function ProjectDetailsView({ activeType, projectSlug }) {
 
         <section className="px-6 pb-10 pt-6 text-center md:px-12">
           <p className="text-base text-white/70 sm:text-lg md:text-xl">Are you preparing for your event?</p>
-          <Link to="/contact-us" className="mt-2 inline-block text-3xl font-light hover:text-white/85 sm:text-6xl md:text-8xl">
+          <Link href="/contact-us" className="mt-2 inline-block text-3xl font-light hover:text-white/85 sm:text-6xl md:text-8xl">
             GET IN TOUCH
           </Link>
         </section>
@@ -242,14 +246,21 @@ function ProjectDetailsView({ activeType, projectSlug }) {
   );
 }
 
-function ProjectsPage({ forcedType }) {
+function ProjectsPage({ forcedType, projectSlug: projectSlugProp, initialProjects = [], initialProject = null }) {
+  const router = useRouter();
   const { projectType = "corporate", projectSlug } = useParams();
   const activeType = normalizeType(forcedType || projectType || "corporate");
-  if (!categoryMap[activeType]) return <Navigate to="/projects/corporate" replace />;
-  if (projectSlug) {
-    return <ProjectDetailsView activeType={activeType} projectSlug={projectSlug} />;
+  const activeProjectSlug = projectSlugProp || projectSlug;
+  useEffect(() => {
+    if (!categoryMap[activeType]) {
+      router.replace("/projects/corporate");
+    }
+  }, [activeType, router]);
+  if (!categoryMap[activeType]) return null;
+  if (activeProjectSlug) {
+    return <ProjectDetailsView activeType={activeType} projectSlug={activeProjectSlug} initialProject={initialProject} />;
   }
-  return <CategoryProjectsView activeType={activeType} />;
+  return <CategoryProjectsView activeType={activeType} initialProjects={initialProjects} />;
 }
 
 export default ProjectsPage;

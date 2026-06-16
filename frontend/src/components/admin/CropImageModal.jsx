@@ -1,3 +1,5 @@
+﻿"use client";
+
 import { useMemo, useState } from "react";
 import Cropper from "react-easy-crop";
 
@@ -59,3 +61,4 @@ function CropImageModal({ open, imageSrc, title = "Crop Image", aspect = 16 / 9,
 }
 
 export default CropImageModal;
+

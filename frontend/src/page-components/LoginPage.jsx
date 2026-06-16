@@ -1,10 +1,12 @@
+﻿"use client";
+
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { loginAdmin } from "../services/api";
 import Seo from "../components/Seo";
 
 function LoginPage() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -16,7 +18,7 @@ function LoginPage() {
     try {
       const response = await loginAdmin(form);
       localStorage.setItem("adminToken", response.token);
-      navigate("/admin");
+      router.push("/admin");
     } catch (err) {
       setError(err?.response?.data?.message || "Login failed");
     } finally {
@@ -58,3 +60,4 @@ function LoginPage() {
 }
 
 export default LoginPage;
+

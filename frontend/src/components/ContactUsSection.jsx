@@ -1,3 +1,5 @@
+﻿"use client";
+
 import { useState } from "react";
 import { MapPin, Phone } from "lucide-react";
 import { submitContactForm } from "../services/api";
@@ -129,3 +131,4 @@ function ContactUsSection() {
 }
 
 export default ContactUsSection;
+
